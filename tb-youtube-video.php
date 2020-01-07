@@ -20,6 +20,8 @@ function tb_youtube_video_shortcode($atts) {
     'rel' => 0,
     'loop' => 0,
     'controls' => 0,
+    'width' => '100%',
+    'height' => '100%',
   ), $atts );
 
   ob_start();
@@ -28,9 +30,30 @@ function tb_youtube_video_shortcode($atts) {
   $url = $protocol . $domainName;
   ?>
   <?php if (!empty($a['id'])) : ?>
-    <iframe id="player" type="text/html" width="550" height="310"
-    src="https://www.youtube.com/embed/<?php echo $a['id']; ?>?rel=<?php echo $a['rel']; ?>&loop=<?php echo $a['loop']; ?>&autoplay=<?php echo $a['autoplay']; ?>&controls=<?php echo $a['controls']; ?>&enablejsapi=1&origin=<?php echo urlencode($url); ?>"
-    frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
+    <div class="embed-container">
+      <iframe id="player" type="text/html" width="550" height="310" style="<?php echo !empty($a['width']) ? 'width: ' . $a['width'] . ';' : ''; ?><?php echo !empty($a['height']) ? 'height: ' . $a['height'] . ';' : ''; ?>"
+      src="https://www.youtube.com/embed/<?php echo $a['id']; ?>?rel=<?php echo $a['rel']; ?>&loop=<?php echo $a['loop']; ?>&autoplay=<?php echo $a['autoplay']; ?>&controls=<?php echo $a['controls']; ?>&enablejsapi=1&origin=<?php echo urlencode($url); ?>"
+      frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
+    </div>
+    <style>
+      .embed-container { 
+        position: relative; 
+        padding-bottom: 56.25%;
+        overflow: hidden;
+        max-width: 100%;
+        height: auto;
+      } 
+
+      .embed-container iframe,
+      .embed-container object,
+      .embed-container embed { 
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
   <?php else : ?>
     <p>Video ID not found</p>
   <?php endif; ?>
@@ -88,6 +111,22 @@ function tb_youtube_video_map_to_wpbackery() {
             "value"       => array(
               'Yes' => 1,
             ),
+          ],
+          [
+            "type" => "textfield",
+            "class" => "",
+            "heading" => __( "Width", "html5blank" ),
+            "param_name" => "width",
+            "value" => "100%", //Default
+            "description" => __( "Default 100%. Values can be in px and %", "html5blank" ),
+          ],
+          [
+            "type" => "textfield",
+            "class" => "",
+            "heading" => __( "Height", "html5blank" ),
+            "param_name" => "height",
+            "value" => "100%", //Default
+            "description" => __( "Default 100%. Values can be in px and %", "html5blank" ),
           ],
         ]
     ]);
